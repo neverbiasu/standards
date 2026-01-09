@@ -16,7 +16,6 @@ This guide is based on the [Google TypeScript Style Guide](https://google.github
 1. Review the Core Rules Matrix to understand mandatory and recommended practices
 2. Integrate the provided [eslint.config.js](./eslint.config.js) into your project
 3. Use [tsconfig.base.json](./tsconfig.base.json) as a foundation for your TypeScript configuration
-4. Refer to the Deviations section to understand our reasoning for diverging from Google's guide
 
 ---
 
@@ -31,102 +30,24 @@ This guide is based on the [Google TypeScript Style Guide](https://google.github
 | **Naming** | Use `camelCase` for variables, functions, and properties. | `@typescript-eslint/naming-convention` | **[MUST]** |
 | **Naming** | Use `UPPER_CASE` for global constants and enum values. | `@typescript-eslint/naming-convention` | **[SHOULD]** |
 | **Patterns** | Prefer `interface` over `type` for object definitions. | `@typescript-eslint/consistent-type-definitions` | **[SHOULD]** |
-| **Patterns** | Use optional chaining (`?.`) instead of null checks when appropriate. | N/A (Language Feature) | **[SHOULD]** |
+| **Patterns** | Use optional chaining (`?.`) instead of null checks when appropriate. | Manual (Code Review) | **[SHOULD]** |
+| **Patterns** | Use ES modules; strongly discourage `namespace` usage. | Manual (Code Review) | **[MUST]** |
+| **Syntax** | Always use semicolons to terminate statements. | `semi` | **[MUST]** |
+| **Enums** | Use string-based enums only. Avoid numeric enums. | Manual (Code Review) | **[SHOULD]** |
 | **Safety** | Disallow non-null assertions using the `!` operator. | `@typescript-eslint/no-non-null-assertion` | **[MUST]** |
 | **Safety** | Disallow empty interfaces. | `@typescript-eslint/no-empty-interface` | **[SHOULD]** |
 | **Safety** | Require explicit return types on exported functions. | `@typescript-eslint/explicit-module-boundary-types` | **[SHOULD]** |
+| **Safety** | Forbid triple-slash directives. Use `tsconfig.json` instead. | `@typescript-eslint/triple-slash-reference` | **[MUST]** |
 | **Async** | Always await promises; don't create floating promises. | `@typescript-eslint/no-floating-promises` | **[MUST]** |
-| **Async** | Prefer `async`/`await` over raw promises for readability. | N/A (Convention) | **[SHOULD]** |
+| **Async** | Prefer `async`/`await` over raw promises for readability. | Manual (Code Review) | **[SHOULD]** |
 | **Imports** | No unused imports. | `@typescript-eslint/no-unused-vars` | **[MUST]** |
 | **Imports** | Organize imports in alphabetical order within groups. | `import/order` | **[SHOULD]** |
 | **Comments** | Public APIs must have JSDoc comments describing intent. | `jsdoc/require-jsdoc` | **[SHOULD]** |
-| **Comments** | Avoid inline comments that restate what the code does. | N/A (Code Review) | **[SHOULD]** |
+| **Comments** | Avoid inline comments that restate what the code does. | Manual (Code Review) | **[SHOULD]** |
 
 ---
 
-## 3. Deviations from Google TS Guide
-
-This section documents where and why we diverge from Google's TypeScript Style Guide.
-
-| Feature | Google Recommendation | Our Deviation | Rationale |
-|---------|----------------------|---------------|-----------|
-| **Semicolons** | Required | Optional | Modern tooling (Prettier, etc.) handles ASI (Automatic Semicolon Insertion) safely. Omitting semicolons results in cleaner, more readable code. |
-| **Enums** | Discouraged (use union types) | Allowed (String-based enums) | String enums provide better developer experience for domain-driven constants with compile-time safety and runtime introspection. Numeric enums remain discouraged. |
-| **Imports** | Unordered | Auto-sorted by tooling | Import organization improves readability and reduces merge conflicts. We enforce this via ESLint plugins. |
-| **`namespace`** | Discouraged | Strongly discouraged | We align with Google here but emphasize ES modules as the only acceptable module system. |
-| **Triple-slash directives** | Limited use | Forbidden | Use `tsconfig.json` `types` field instead. Triple-slash directives reduce portability. |
-
----
-
-## 4. Code Examples
-
-### ✅ Good Examples
-
-```typescript
-// Explicit types for public API
-export interface UserProfile {
-  id: string
-  name: string
-  email: string | null
-}
-
-// Type-safe enum
-export enum UserRole {
-  Admin = 'ADMIN',
-  Member = 'MEMBER',
-  Guest = 'GUEST',
-}
-
-// Proper error handling with unknown
-export async function fetchUser(id: string): Promise<UserProfile> {
-  try {
-    const response = await fetch(`/api/users/${id}`)
-    return await response.json()
-  } catch (error) {
-    // Use unknown, then narrow the type
-    if (error instanceof Error) {
-      throw new Error(`Failed to fetch user: ${error.message}`)
-    }
-    throw new Error('Failed to fetch user: Unknown error')
-  }
-}
-
-// Optional chaining instead of null checks
-function getUserEmail(user: UserProfile | null): string {
-  return user?.email ?? 'no-email@example.com'
-}
-```
-
-### ❌ Bad Examples
-
-```typescript
-// Using 'any' - destroys type safety
-function processData(data: any) {
-  return data.value
-}
-
-// Non-null assertion - can cause runtime errors
-function getUsername(user: UserProfile | null): string {
-  return user!.name // Dangerous!
-}
-
-// Implicit any in catch block
-try {
-  riskyOperation()
-} catch (e) {
-  console.log(e.message) // Error: 'e' is implicitly 'any'
-}
-
-// Numeric enum - values are not intuitive
-enum Status {
-  Active, // 0
-  Inactive, // 1
-}
-```
-
----
-
-## 5. Configuration Integration
+## 3. Configuration Integration
 
 ### Quick Start
 
@@ -160,7 +81,7 @@ Add to your GitHub Actions workflow:
 
 ---
 
-## 6. FAQ
+## 4. FAQ
 
 ### Why forbid `any`?
 
@@ -176,7 +97,7 @@ No. Let TypeScript infer types where obvious. Over-annotation creates maintenanc
 
 ---
 
-## 7. Resources
+## 5. Resources
 
 - [Google TypeScript Style Guide](https://google.github.io/styleguide/tsguide.html)
 - [TypeScript Deep Dive](https://basarat.gitbook.io/typescript/)
@@ -185,7 +106,7 @@ No. Let TypeScript infer types where obvious. Over-annotation creates maintenanc
 
 ---
 
-## 8. Versioning
+## 6. Versioning
 
 This guide follows semantic versioning:
 
