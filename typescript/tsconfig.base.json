@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "compilerOptions": {
+    // ==========================================
+    // TYPE CHECKING - STRICT MODE [MUST]
+    // ==========================================
+    "strict": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "strictBindCallApply": true,
+    "strictPropertyInitialization": true,
+    "noImplicitThis": true,
+    "alwaysStrict": true,
+
+    // ==========================================
+    // ADDITIONAL TYPE SAFETY [MUST]
+    // ==========================================
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+
+    // ==========================================
+    // MODULE RESOLUTION
+    // ==========================================
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    
+    // Allow importing JSON files
+    "resolveJsonModule": true,
+    
+    // Ensure consistent casing
+    "forceConsistentCasingInFileNames": true,
+    
+    // Allow default imports from modules with no default export
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+
+    // ==========================================
+    // EMIT
+    // ==========================================
+    "declaration": true,
+    "declarationMap": true,
+    "sourceMap": true,
+    
+    // Skip lib check for faster compilation (adjust as needed)
+    "skipLibCheck": true,
+    
+    // Prevent emitting files if any errors
+    "noEmitOnError": true,
+
+    // ==========================================
+    // ADVANCED
+    // ==========================================
+    // Enable all strict options
+    "exactOptionalPropertyTypes": true,
+    
+    // Interop constraints
+    "isolatedModules": true,
+    
+    // Verbatim module syntax
+    "verbatimModuleSyntax": false
+  },
+
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "build", "**/*.spec.ts", "**/*.test.ts"]
+}

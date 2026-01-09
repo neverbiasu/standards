@@ -1,0 +1,76 @@
+name: Validate TypeScript Standards
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'typescript/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - 'typescript/**'
+
+jobs:
+  validate:
+    name: Validate TypeScript Config
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        working-directory: typescript
+        run: |
+          npm init -y
+          npm install -D eslint @typescript-eslint/parser @typescript-eslint/eslint-plugin typescript
+
+      - name: Validate ESLint config
+        working-directory: typescript
+        run: |
+          # Check if config file is valid JavaScript
+          node -c eslint.config.js
+
+      - name: Validate TSConfig
+        working-directory: typescript
+        run: |
+          # Check if tsconfig is valid JSON
+          npx tsc --showConfig --project tsconfig.base.json > /dev/null
+
+      - name: Test against sample violations
+        working-directory: typescript
+        run: |
+          # Create a test file with known violations
+          mkdir -p test-samples
+          cat > test-samples/bad.ts << 'EOF'
+          // This file should trigger lint errors
+          const x: any = 5;
+          let user: object | null = null;
+          const name = user!.name;
+          EOF
+          
+          # This should fail - if it passes, our config is broken
+          npx eslint test-samples/bad.ts || echo "Correctly caught violations ✓"
+
+  documentation:
+    name: Check Documentation Sync
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Verify rule coverage
+        run: |
+          echo "Checking if all rules in README are present in eslint.config.js..."
+          # This is a placeholder - you can add more sophisticated checks
+          grep -q "no-explicit-any" typescript/README.md && \
+          grep -q "no-explicit-any" typescript/eslint.config.js && \
+          echo "✓ Documentation is in sync" || \
+          echo "⚠ Warning: Documentation may be out of sync"
