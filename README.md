@@ -17,6 +17,13 @@ A strict TypeScript style guide based on Google's TypeScript Style Guide, with c
 - [ESLint Configuration](./typescript/eslint.config.js)
 - [Base TSConfig](./typescript/tsconfig.base.json)
 
+### [Python](./python/README.md)
+
+A pragmatic Python style guide based on **PEP 8** as the primary normative reference.
+
+**Quick Links:**
+- [Style Guide](./python/README.md)
+
 ## Getting Started
 
 1. **Choose your language**: Navigate to the appropriate directory
@@ -35,7 +42,6 @@ All rules in this repository follow RFC 2119 standard keywords:
 ## Roadmap
 
 Future language support planned:
-- Python
 - Rust
 - CSS/SCSS
 - C++
