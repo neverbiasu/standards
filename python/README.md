@@ -14,7 +14,7 @@ This guide is based on **[PEP 8 - Style Guide for Python Code](https://peps.pyth
 ### How to Use This Guide
 
 1. Review the Core Rules Matrix and follow all **[MUST]** rules by default
-2. Use tooling (formatter + linter) to enforce repetitive style decisions
+2. Use the provided config file (`pyproject.toml`) with formatter/linter
 3. Allow **[SHOULD]** deviations only with explicit and local justification
 
 ---
@@ -43,6 +43,20 @@ This guide is based on **[PEP 8 - Style Guide for Python Code](https://peps.pyth
 ---
 
 ## 3. Practical Examples
+
+### Tooling Configuration
+
+This directory provides a ready-to-use configuration file:
+
+- `pyproject.toml` (Black + Ruff unified settings)
+
+Recommended commands:
+
+```bash
+ruff check .
+ruff check . --fix
+black .
+```
 
 ### Imports and Spacing
 
@@ -108,11 +122,53 @@ Rules of thumb:
     - Annotated default parameter: use spaces (`def f(timeout: int = 5): ...`)
     - Keyword arguments at call site: no spaces (`f(timeout=5)`)
 
+### Blank Lines by Scenario
+
+| Scenario | Rule | Level |
+|----------|------|-------|
+| Top-level `class`/`def` | Keep **2 blank lines** between any top-level blocks. | **[MUST]** |
+| Methods inside a class | Keep **1 blank line** between methods. | **[MUST]** |
+| Imports before top-level code | Separate import groups with **1 blank line**, then add **2 blank lines** before first top-level `class`/`def`/assignment block. | **[MUST]** |
+| Top-level assignment before `def` | Keep **2 blank lines** between assignment block and next top-level `def`. | **[MUST]** |
+| Decorator before `def` | Keep **0 blank lines** between `@decorator` and its `def`. | **[MUST]** |
+| Inside function body | Use blank lines only for real logical splits; avoid decorative empty lines. | **[SHOULD]** |
+| Consecutive empty lines | Do not use multiple consecutive blank lines. | **[MUST]** |
+
+Notes:
+
+- No blank line between `def` and its docstring
+- Nested `def` inside a function: usually `0-1` blank line, readability first
+
+Example:
+
+```python
+from pathlib import Path
+
+import requests
+
+
+TIMEOUT = 5
+
+
+class Service:
+    def normalize(self, text: str) -> str:
+        return text.strip()
+
+
+def save(service: Service, text: str) -> str:
+    return service.normalize(text)
+
+
+def run() -> None:
+    print("ok")
+```
+
 ---
 
 ## 4. Execution Guidance
 
 - Formatter and linter settings **MUST** align to PEP 8 decisions above
+- Repository consumers **SHOULD** reuse `python/pyproject.toml` directly, or copy the same values
 - Code review should reject violations of **[MUST]** rules
 - For legacy files, prefer incremental cleanup: touched code must comply
 
@@ -148,5 +204,5 @@ This guide follows semantic versioning:
 - **Minor**: New rules or non-breaking clarifications
 - **Patch**: Typo fixes and documentation improvements
 
-**Current Version**: 1.0.0  
-**Last Updated**: 2026-02-17
+**Current Version**: 1.1.0  
+**Last Updated**: 2026-03-12

@@ -23,6 +23,7 @@ A pragmatic Python style guide based on **PEP 8** as the primary normative refer
 
 **Quick Links:**
 - [Style Guide](./python/README.md)
+- [Python Config](./python/pyproject.toml)
 
 ## Getting Started
 
